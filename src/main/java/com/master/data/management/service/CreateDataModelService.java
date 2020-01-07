@@ -1,4 +1,4 @@
-package com.mdm.DynamicTable.service;
+package com.master.data.management.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;

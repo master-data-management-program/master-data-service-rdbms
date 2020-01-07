@@ -1,10 +1,10 @@
-package com.mdm.DynamicTable.controller;
+package com.master.data.management.controller;
 
 import static org.springframework.http.HttpStatus.OK;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mdm.DynamicTable.dto.DataModelResponse;
-import com.mdm.DynamicTable.service.DataModelsOrchestrationService;
+import com.master.data.management.dto.DataModelResponse;
+import com.master.data.management.service.DataModelsOrchestrationService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

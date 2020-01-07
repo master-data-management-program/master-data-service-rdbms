@@ -1,4 +1,4 @@
-package com.mdm.DynamicTable;
+package com.master.data.management;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

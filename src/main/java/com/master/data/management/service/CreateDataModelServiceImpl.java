@@ -1,11 +1,11 @@
-package com.mdm.DynamicTable.service;
+package com.master.data.management.service;
 
 import static java.util.Objects.nonNull;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mdm.DynamicTable.dao.DataModelDAO;
-import com.mdm.DynamicTable.dto.TableDataType;
+import com.master.data.management.dao.DataModelDAO;
+import com.master.data.management.dto.TableDataType;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;

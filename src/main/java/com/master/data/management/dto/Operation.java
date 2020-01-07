@@ -1,4 +1,4 @@
-package com.mdm.DynamicTable.dto;
+package com.master.data.management.dto;
 
 import java.util.Arrays;
 

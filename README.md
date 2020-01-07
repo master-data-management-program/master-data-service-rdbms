@@ -1,9 +1,11 @@
 # master-data-service-rdbms
-
+### SWAGGER
+ - [swagger link](http://localhost:2101/swagger-ui.html#/)
+ 
 ### Sample request payload:
 
 #### POST
-- url:http://localhost:2101/master/data/management/v1/models
+- url:http://localhost:2101/master/data/management/v1/tables
 
 - request-body : 
 - 1)

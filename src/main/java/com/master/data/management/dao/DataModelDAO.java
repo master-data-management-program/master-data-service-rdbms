@@ -1,4 +1,4 @@
-package com.mdm.DynamicTable.dao;
+package com.master.data.management.dao;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
