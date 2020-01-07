@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdm.DynamicTable.dao.DataModelDAO;
 import com.mdm.DynamicTable.dto.TableDataType;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,6 +33,18 @@ public class CreateDataModelServiceImpl implements CreateDataModelService {
     String createTableSqlString = createTableFromRequestNode(
         mapper.writeValueAsString(requestJson));
     dataModelDAO.executeCreateTable(createTableSqlString);
+  }
+
+  @Override
+  @Transactional
+  public List<String> getTablesList() {
+    return dataModelDAO.getTablesFromDatabase();
+  }
+
+  @Override
+  @Transactional
+  public List<String> getFieldNamesByTableName(String tableName) {
+    return dataModelDAO.getFieldNamesByTableName(tableName);
   }
 
 

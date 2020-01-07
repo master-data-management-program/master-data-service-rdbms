@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mdm.DynamicTable.dto.DataModelResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,4 +27,11 @@ public class DataModelsOrchestrationService {
     return DataModelResponse.builder().httpStatus(OK).build();
   }
 
+  public List<String> getTablesList(){
+    return createDataModelService.getTablesList();
+  }
+
+  public List<String> getFieldsByTableName(String tableName) {
+    return createDataModelService.getFieldNamesByTableName(tableName);
+  }
 }
