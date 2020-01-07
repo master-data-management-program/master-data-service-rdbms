@@ -7,6 +7,7 @@
 
 - request-body : 
 - 1)
+```
 {
   "tableName": "testFields2",
   "fields": [
@@ -50,8 +51,9 @@
   "status": "ACTIVE",
   "createdBy": "Admin"
 }
-
+```
 - 2) 
+```
 {
   "tableName": "testFields",
   "fields": [
@@ -90,3 +92,4 @@
   "status": "ACTIVE",
   "createdBy": "Admin"
 }
+```
