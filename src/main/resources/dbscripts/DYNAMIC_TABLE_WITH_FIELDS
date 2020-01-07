@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE DYNAMIC_TABLE_CREATION_WITH_FIELDS(yourTableFieldsStr IN VARCHAR2)
+    is
+    begin
+        execute immediate yourTableFieldsStr;
+    end;

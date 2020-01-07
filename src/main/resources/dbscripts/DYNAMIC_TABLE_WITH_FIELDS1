@@ -1,0 +1,7 @@
+CREATE OR REPLACE PROCEDURE DYNAMIC_TABLE_CREATION_WITH_FIELDS(yourTableName IN VARCHAR2, yourTableFieldsStr IN varchar2)
+    is
+    begin
+        execute immediate 'CREATE TABLE ' || yourTableName || yourTableFieldsStr;
+    end;
+
+

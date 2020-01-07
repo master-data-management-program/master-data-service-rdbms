@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE ALTER_TABLE_WITH_FIELDS(yourTableName IN VARCHAR2, yourTableFieldsStr IN varchar2)
+    is
+    begin
+        execute immediate 'ALTER TABLE ' || yourTableName || yourTableFieldsStr;
+    end;

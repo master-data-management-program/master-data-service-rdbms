@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: MASTER-DATA-MANAGEMENT-RDBMS-API-V1
+
+data:
+  endpoint: "/master/data/management/v1"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: ["env","beans"]
+server:
+  port: 2101
