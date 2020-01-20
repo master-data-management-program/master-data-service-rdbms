@@ -1,11 +1,11 @@
 package com.master.data.management.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
+import org.json.simple.JSONObject;
 
 public interface CreateDataModelService {
 
-  void createTable(JsonNode createTableSqlString) throws Exception;
+  void upsertTable(JSONObject createTableSqlString) throws Exception;
 
   List<String> getTablesList();
 

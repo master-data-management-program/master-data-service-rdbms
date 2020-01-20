@@ -3,8 +3,9 @@ package com.master.data.management.dto;
 import java.util.Arrays;
 
 public enum TableDataType {
-  STRING("String", 's', "VARCHAR2"),
-  NUMBER("Number", 'n', "NUMBER");
+  STRING("String", 's', "VARCHAR"),
+  NUMBER("Number", 'n', "NUMERIC"),
+  UUID("UUID", 'i', "UUID");
 
   String name;
   char key;

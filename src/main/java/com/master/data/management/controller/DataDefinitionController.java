@@ -2,13 +2,13 @@ package com.master.data.management.controller;
 
 import static org.springframework.http.HttpStatus.OK;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.master.data.management.dto.DataModelResponse;
 import com.master.data.management.service.DataModelsOrchestrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,15 +28,15 @@ public class DataDefinitionController {
   private DataModelsOrchestrationService orchestrationService;
 
   @ApiOperation(value = "Create new entity endpoint to create table in database witht the provided json request.", consumes = "application/hal+json", produces = "application/json")
-  @PostMapping(produces = "application/json", consumes = "application/hal+json")
+  @PostMapping(produces = "application/json", consumes = "application/json")
   public ResponseEntity<String> createNewEntity(
-      @RequestBody JsonNode requestJson) throws Exception {
+      @RequestBody JSONObject requestJson) throws Exception {
 
     //step1 Json schema validation needs to be handled for create table
 
     //step2 create table with provided fields
     DataModelResponse dataModelResponse = orchestrationService
-        .createDataModel(requestJson);
+        .createAndAlterModel(requestJson);
 
     //step3 return the response back to consumer
     return ResponseEntity
@@ -58,4 +58,20 @@ public class DataDefinitionController {
     List<String> fieldsList = orchestrationService.getFieldsByTableName(tableName);
     return ResponseEntity.status(OK).body(fieldsList);
   }
+
+//  @ApiOperation(value = "Alter entity endpoint to alter table in database with the provided json request.", consumes = "application/hal+json", produces = "application/json")
+//  @PutMapping(produces = "application/json", consumes = "application/hal+json")
+//  public ResponseEntity<String> alterEntity(
+//      @RequestBody JsonNode requestJson) throws Exception {
+//
+//    step1 Json schema validation needs to be handled for create table
+//    step2 create table with provided fields
+//    DataModelResponse dataModelResponse = orchestrationService
+//        .alterDataModel(requestJson);
+//
+//    step3 return the response back to consumer
+//    return ResponseEntity
+//        .status(dataModelResponse.getHttpStatus())
+//        .body(dataModelResponse.getStatusMessage());
+//  }
 }
