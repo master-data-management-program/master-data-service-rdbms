@@ -1,8 +1,5 @@
 package com.master.data.management.service;
 
-import static org.springframework.http.HttpStatus.CREATED;
-
-import com.master.data.management.dto.DataModelResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,24 +11,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DataModelsOrchestrationService {
 
-  private final CreateDataModelService createDataModelService;
+  private final ManageDataModelService manageDataModelService;
 
-  public DataModelResponse createAndAlterModel(JSONObject requestJson) throws Exception {
+  //Manage DataModel Services.
+
+  public void createAndAlterModel(JSONObject requestJson) throws Exception {
     //step1 create table with the required fields from json node
-    createDataModelService.upsertTable(requestJson);
+    manageDataModelService.upsertTable(requestJson);
 
     //step2 create Json schema on a fly for the object for next crud rest operations OR
     // keep these validations in another table to do these when acutal rest calls happened.
-
-    // return DataModelResponse
-    return DataModelResponse.builder().httpStatus(CREATED).build();
   }
 
   public List<String> getTablesList() {
-    return createDataModelService.getTablesList();
+    return manageDataModelService.getTablesList();
   }
 
   public List<String> getFieldsByTableName(String tableName) {
-    return createDataModelService.getFieldNamesByTableName(tableName);
+    return manageDataModelService.getFieldNamesByTableName(tableName);
   }
+
+  //Manage Dataflow Services.
+
+
 }

@@ -1,5 +1,11 @@
 package com.master.data.management.service;
 
+import static com.master.data.management.utils.ApplicationConstants.DATA_TYPE_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.DEFAULT_VALUE_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.MANDATORY_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.SPACE_STR;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.VALIDATIONS_JSON_KEY;
 import static java.util.Objects.nonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
@@ -19,21 +25,6 @@ public class AbstractCreateService {
 
   protected DataModelDAO dataModelDAO;
 
-
-  protected static final String FIELDS_JSON_KEY = "fields";
-  protected static final String PRIMARY_KEYS_JSON_KEY = "primaryKeys";
-  protected static final String REFERENCE_JSON_KEY = "reference";
-  protected static final String TABLE_NAME_JSON_KEY = "tableName";
-  protected static final String CHANGES_JSON_KEY = "changes";
-  protected static final String CONSTRAINTS_JSON_KEY = "constraints";
-  protected static final String TABLE_JSON_KEY = "table";
-
-  private static final String SPACE_STR = " ";
-  private static final String DATA_TYPE_JSON_KEY = "dataType";
-  private static final String DEFAULT_VALUE_JSON_KEY = "defaultValue";
-  private static final String VALIDATIONS_JSON_KEY = "validations";
-  private static final String MANDATORY_JSON_KEY = "mandatory";
-  private static final String TABLE_FIELD_NAME_JSON_KEY = "name";
 
   protected void generatePrimaryKeyForCreateStmt(JSONArray primaryKeys,
       StringBuilder sqlBuilder,

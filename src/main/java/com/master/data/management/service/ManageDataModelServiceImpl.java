@@ -1,5 +1,6 @@
 package com.master.data.management.service;
 
+import static com.master.data.management.utils.ApplicationConstants.*;
 import static java.util.Optional.ofNullable;
 
 import com.master.data.management.dao.DataModelDAO;
@@ -13,18 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-public class CreateDataModelServiceImpl extends AbstractCreateService implements
-    CreateDataModelService {
+public class ManageDataModelServiceImpl extends AbstractCreateService implements
+    ManageDataModelService {
 
   @Autowired
-  public CreateDataModelServiceImpl(DataModelDAO dataModelDAO) {
+  public ManageDataModelServiceImpl(DataModelDAO dataModelDAO) {
     this.dataModelDAO = dataModelDAO;
   }
 
   @Override
   @Transactional
   public void upsertTable(JSONObject jsonObject) {
-    String sqlType = (String) jsonObject.get("operation");
+    String sqlType = (String) jsonObject.get(OPERATION_JSON_KEY);
     SqlOperation sqlOperation = SqlOperation.getSqlOperation(sqlType);
 
     StringBuilder sqlBuilder = new StringBuilder(sqlOperation.getSql());

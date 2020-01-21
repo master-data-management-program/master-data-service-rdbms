@@ -1,8 +1,11 @@
 package com.master.data.management.controller;
 
+import static com.master.data.management.utils.ApplicationConstants.OPERATION_JSON_KEY;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.master.data.management.dto.DataModelResponse;
 import com.master.data.management.service.DataModelsOrchestrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +13,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,21 +31,29 @@ public class DataDefinitionController {
   @Autowired
   private DataModelsOrchestrationService orchestrationService;
 
-  @ApiOperation(value = "Create new entity endpoint to create table in database witht the provided json request.", consumes = "application/hal+json", produces = "application/json")
+  @ApiOperation(value = "UpSertDataModel endpoint to create and alter table in database with the provided json request.", consumes = "application/hal+json", produces = "application/json")
   @PostMapping(produces = "application/json", consumes = "application/json")
-  public ResponseEntity<String> createNewEntity(
+  public ResponseEntity<String> upsertDataModel(
       @RequestBody JSONObject requestJson) throws Exception {
+    if (isNull(requestJson)) {
+      throw new IllegalArgumentException("Request body must not be empty.");
+    }
+    Object operation = requestJson.get(OPERATION_JSON_KEY);
+    HttpStatus status = CREATED;
+    String responseBody = "Successfully Entity has been created.";
 
     //step1 Json schema validation needs to be handled for create table
 
     //step2 create table with provided fields
-    DataModelResponse dataModelResponse = orchestrationService
-        .createAndAlterModel(requestJson);
+    orchestrationService.createAndAlterModel(requestJson);
 
     //step3 return the response back to consumer
-    return ResponseEntity
-        .status(dataModelResponse.getHttpStatus())
-        .body(dataModelResponse.getStatusMessage());
+    if (nonNull(operation) && !operation.equals("create")) {
+      status = OK;
+      responseBody = "Successfully Entity has been updated.";
+    }
+
+    return ResponseEntity.status(status).body(responseBody);
   }
 
   @ApiOperation(value = "Retrieves all tablenames which are active in the database.", produces = "application/json")
