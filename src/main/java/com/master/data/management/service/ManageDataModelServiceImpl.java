@@ -12,11 +12,20 @@ import static com.master.data.management.utils.ApplicationConstants.TABLE_NAME_J
 import static java.util.Optional.ofNullable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
 import com.master.data.management.jpa.entities.CustomField;
+import com.master.data.management.jpa.entities.TableVersionEntity;
 import com.master.data.management.jpa.repos.CustomFieldsRepository;
+import com.master.data.management.jpa.repos.TableVersionsRepository;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,12 +38,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManageDataModelServiceImpl extends AbstractCreateService implements
     ManageDataModelService {
 
+  private ObjectMapper mapper;
+
   @Autowired
   public ManageDataModelServiceImpl(DataModelDAO dataModelDAO,
-      CustomFieldsRepository customFieldsRepository) {
+      CustomFieldsRepository customFieldsRepository,
+      TableVersionsRepository tableVersionsRepository,
+      ObjectMapper mapper) {
     this.dataModelDAO = dataModelDAO;
     this.customFieldsRepository = customFieldsRepository;
+    this.tableVersionsRepository = tableVersionsRepository;
+    this.mapper = mapper;
   }
+
+//  @PostConstruct
+//  public void createRequiredTables() {
+//    dataModelDAO.createTableVersions();
+//  }
 
   @Override
   @Transactional
@@ -84,9 +104,48 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
 
       throw new UnsupportedOperationException("Sql Operation value must be alter or create.");
     }
+
     log.info("Update Successful.");
+    updateTableDeltas(jsonObject, tableName);
   }
 
+
+  @SneakyThrows
+  private void updateTableDeltas(JSONObject jsonObject, String tableName) {
+    String effective = mapper.writeValueAsString(jsonObject);
+    Map<LocalDateTime, JSONObject> deltas = new HashMap<>();
+
+    Optional<TableVersionEntity> entityOptional = tableVersionsRepository
+        .findByTableName(tableName);
+
+    TableVersionEntity tableVersionEntity = entityOptional
+        .orElse(
+            TableVersionEntity
+                .builder()
+                .tableName(tableName)
+                .build()
+        );
+
+    if (entityOptional.isPresent()) {
+      log.info("{} is existing table", tableName);
+      try {
+        deltas = mapper.convertValue(mapper.readTree(entityOptional.get().getDeltas()),
+            new TypeReference<HashMap<LocalDateTime, JSONObject>>() {
+            });
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    deltas.put(LocalDateTime.now(), jsonObject);
+
+    tableVersionEntity.setEffective(effective);
+    tableVersionEntity.setDeltas(mapper.writeValueAsString(deltas));
+
+    tableVersionsRepository.save(tableVersionEntity);
+
+    log.info("Table_Version successfully updated with latest JsonObject deltas.");
+  }
 
   @Override
   public List<String> getTablesList() {
