@@ -1,5 +1,6 @@
 package com.master.data.management.service;
 
+import com.master.data.management.jpa.entities.CustomField;
 import java.util.List;
 import org.json.simple.JSONObject;
 
@@ -10,4 +11,8 @@ public interface ManageDataModelService {
   List<String> getTablesList();
 
   List<String> getFieldNamesByTableName(String tableName);
+
+  List<CustomField> getAllCustomFields();
+
+  void createNewCustomField(JSONObject requestJson);
 }

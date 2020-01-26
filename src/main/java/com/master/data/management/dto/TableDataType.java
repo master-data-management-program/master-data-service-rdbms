@@ -5,6 +5,10 @@ import java.util.Arrays;
 public enum TableDataType {
   STRING("String", 's', "VARCHAR"),
   NUMBER("Number", 'n', "NUMERIC"),
+  DATE_ONLY("DateOnly", 'd', "DATE"),
+  BOOLEAN("boolean", 'b', "BOOLEAN"),
+  TIMESTAMP_WITH_ZONE("timestamp", 't', "TIMESTAMP"),
+  TIMESTAMP_WITHOUT_ZONE("timestampWithUTC", 'z', "TIMESTAMPZ"),
   UUID("UUID", 'i', "UUID");
 
   String name;

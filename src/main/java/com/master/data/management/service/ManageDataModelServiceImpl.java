@@ -1,9 +1,21 @@
 package com.master.data.management.service;
 
-import static com.master.data.management.utils.ApplicationConstants.*;
+import static com.master.data.management.utils.ApplicationConstants.CHANGES_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.CONSTRAINTS_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.FIELDS_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.OPERATION_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.PRIMARY_KEYS_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.REFERENCE_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_NAME_JSON_KEY;
 import static java.util.Optional.ofNullable;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
+import com.master.data.management.jpa.entities.CustomField;
+import com.master.data.management.jpa.repos.CustomFieldsRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -18,8 +30,10 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
     ManageDataModelService {
 
   @Autowired
-  public ManageDataModelServiceImpl(DataModelDAO dataModelDAO) {
+  public ManageDataModelServiceImpl(DataModelDAO dataModelDAO,
+      CustomFieldsRepository customFieldsRepository) {
     this.dataModelDAO = dataModelDAO;
+    this.customFieldsRepository = customFieldsRepository;
   }
 
   @Override
@@ -82,5 +96,28 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
   @Override
   public List<String> getFieldNamesByTableName(String tableName) {
     return dataModelDAO.getFieldNamesByTableName(tableName);
+  }
+
+  @Override
+  public List<CustomField> getAllCustomFields() {
+    return customFieldsRepository.findAll();
+  }
+
+  @Override
+  @Transactional
+  public void createNewCustomField(JSONObject requestJson) {
+    try {
+      String fieldName = (String) requestJson.get(TABLE_FIELD_NAME_JSON_KEY);
+      String fieldJson = new ObjectMapper().writeValueAsString(requestJson);
+      customFieldsRepository
+          .save(
+              CustomField.builder()
+                  .fieldJson(fieldJson)
+                  .fieldName(fieldName)
+                  .build()
+          );
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 }

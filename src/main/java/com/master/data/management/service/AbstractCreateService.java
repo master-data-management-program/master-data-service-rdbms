@@ -13,6 +13,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
 import com.master.data.management.dto.TableDataType;
+import com.master.data.management.jpa.repos.CustomFieldsRepository;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import org.json.simple.parser.JSONParser;
 public class AbstractCreateService {
 
   protected DataModelDAO dataModelDAO;
+  protected CustomFieldsRepository customFieldsRepository;
 
 
   protected void generatePrimaryKeyForCreateStmt(JSONArray primaryKeys,

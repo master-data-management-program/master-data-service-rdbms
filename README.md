@@ -8,7 +8,7 @@
 - url:http://localhost:2101/master/data/management/v1/tables
 
 - request-body : 
-- 1)
+- 1) Create Table
 ```
 {
   "tableName": "testFields2",
@@ -43,8 +43,23 @@
           "splChars": false
         }
       }
-    }
-  ],
+    },
+   {
+     "name": "user-email",
+     "index": false,
+     "datatype": "String",
+     "field-type": "email",
+     "validations": {
+       "length": 10
+       "mandatory": true,
+       "allowed": {
+         "chars": true,
+         "numbers": true
+       }
+     }
+   }
+  ], 
+  "operation": "create",
   "reference":{
   	"table":"testFields",
   	"field":"wheelPart1",
@@ -54,7 +69,7 @@
   "createdBy": "Admin"
 }
 ```
-- 2) 
+- 2) Crate Table
 ```
 {
   "tableName": "testFields",
@@ -91,124 +106,157 @@
       }
     }
   ],
+  "operation": "create",
   "status": "ACTIVE",
   "createdBy": "Admin"
 }
 ```
-3) 
+3) Alter Table
 ```
-{
-  "fields": [
-    {
-      "name": "salesId",
-      "index": false,
-      "datatype": "number",
-      "field-type": "Number",
-      "validations": {
-        "length": 10,
-        "mandatory": true
-      },
-      "reference": {
-        "field": "salesNumber",
-        "table": "salesTable"
-      }
-    },
-    {
-      "name": "part",
-      "index": true,
-      "datatype": "string",
-      "field-type": "String",
-      "validations": {
-        "length": 10,
-        "mandatory": true,
-        "allowed": {
-          "chars": true,
-          "numbers": true,
-          "splChars": true
-        }
-      }
-    },
-    {
-      "name": "equipment",
-      "index": false,
-      "datatype": "number",
-      "field-type": "number",
-      "validations": {
-        "length": 10,
-        "precision": 2,
-        "mandatory": true,
-        "allowed": {
-          "chars": false,
-          "numbers": true,
-          "splChars": false
-        }
-      }
-    }
-  ],
-  "operation": "alter",
-  "changes": {
-    "table": {},
-    "fields": {
-      "add": [
-        {
-          "fieldName": "newField1",
-          "datatype": "String",
-          "length": 20
+  {
+    "tableName": "testFields20",
+    "fields": [
+      {
+        "name": "salesId",
+        "index": false,
+        "dataType": "number",
+        "field-type": "Number",
+        "validations": {
+          "length": 10,
+          "mandatory": true
         },
-        {
-          "fieldName": "newField2",
-          "datatype": "number",
-          "length": 20
+        "reference": {
+          "field": "salesNumber",
+          "table": "salesTable"
         }
-      ],
-      "remove": [
-        "equipment"
-      ],
-      "rename": [
-        {
-          "part": "newPart"
-        }
-      ],
-      "modify": [
-        {
-          "fieldName": "salesId",
-          "length": "100"
-        }
-      ]
-    },
-    "constraints": {
-      "add": {
-        "references": [
-          {
-            "table": "testFields",
-            "field": "wheelPart1",
-            "byField": "testFieldId"
+      },
+      {
+        "name": "part",
+        "index": true,
+        "dataType": "string",
+        "field-type": "String",
+        "validations": {
+          "length": 10,
+          "mandatory": true,
+          "allowed": {
+            "chars": true,
+            "numbers": true,
+            "splChars": true
           }
-        ],
-        "mandatory": [
+        }
+      },
+      {
+        "name": "equipment",
+        "index": false,
+        "dataType": "number",
+        "field-type": "number",
+        "validations": {
+          "length": 10,
+          "precision": 2,
+          "mandatory": true,
+          "allowed": {
+            "chars": false,
+            "numbers": true,
+            "splChars": false
+          }
+        }
+      }
+    ],
+    "operation": "alter",
+    "primaryKeys":["part"],
+    "changes": {
+      "table": {
+        "status": "ACTIVE",
+        "rename": "renamedTable20"
+      },
+      "fields": {
+        "add": [
           {
-            "equipment": false
+            "name": "newField60",
+            "dataType": "String",
+            "field-type": "String",
+            "defaultValue": "newFieldValue",
+            "validations": {
+              "length": 30,
+              "mandatory": false,
+              "allowed": {
+                "chars": true,
+                "numbers": true,
+                "splChars": true
+              }
+            }
           },
           {
-            "newField1": true
+            "name": "newField61",
+            "dataType": "number",
+            "field-type": "number",
+            "defaultValue": "100",
+            "validations": {
+              "length": 20,
+              "mandatory": false,
+              "allowed": {
+                "chars": true,
+                "numbers": true,
+                "splChars": true
+              }
+            }
           }
         ],
-        "primaryKeys": []
-      },
-      "remove": {
-        "references": [
+        "remove": [
+          "newField61"
+        ],
+        "rename": [
           {
-            "table": "testFields",
-            "field": "wheelPart1",
-            "byField": "testFieldId"
+            "from": "part",
+            "to": "newPart"
           }
         ],
-        "primaryKeys": []
+        "modify": [
+          {
+            "name": "newField60",
+            "dataType": "number",
+            "validations": {
+              "defaultValue": 100,
+              "length": 20,
+              "mandatory": false,
+              "allowed": {
+                "chars": true,
+                "numbers": true,
+                "splChars": true
+              }
+            }
+          }
+        ]
+      },
+      "constraints": {
+        "references": {
+          "add": [
+            {
+              "table": "testFields",
+              "field": "wheelPart1",
+              "byField": "testFieldId"
+            }
+          ],
+          "remove": [
+            {
+              "table": "testFields",
+              "field": "wheelPart1",
+              "byField": "testFieldId"
+            }
+          ]
+        },
+        "primaryKeys": [
+          "newPart"
+        ],
+        "notNull": {
+          "remove": [
+            "newPart"
+          ]
+        }
       }
     },
     "updatedBy": "Admin"
   }
-}
 
 ```
 
