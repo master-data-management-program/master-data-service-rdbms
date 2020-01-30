@@ -7,6 +7,7 @@ public enum TableDataType {
   NUMBER("Number", 'n', "NUMERIC"),
   DATE_ONLY("DateOnly", 'd', "DATE"),
   BOOLEAN("boolean", 'b', "BOOLEAN"),
+  BIGINT("bigint", 'g', "bigint"),
   TIMESTAMP_WITH_ZONE("timestamp", 't', "TIMESTAMP"),
   TIMESTAMP_WITHOUT_ZONE("timestampWithUTC", 'z', "TIMESTAMPZ"),
   UUID("UUID", 'i', "UUID");

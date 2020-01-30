@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.master.data.management.jpa.entities.CustomField;
 import com.master.data.management.service.DataModelsOrchestrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api("This controller endpoints are used to (DDL) create and manage tables")
@@ -72,35 +70,5 @@ public class DataDefinitionController {
     List<String> fieldsList = orchestrationService.getFieldsByTableName(tableName);
     return ResponseEntity.status(OK).body(fieldsList);
   }
-
-  @ApiOperation(value = "Retrieves all custom field structures from the database", produces = "application/json")
-  @GetMapping(value = "/customFields", produces = "application/json")
-  public ResponseEntity<List<CustomField>> getAllCustomFields() {
-    List<CustomField> fieldsList = orchestrationService.getCustomFields();
-    return ResponseEntity.status(OK).body(fieldsList);
-  }
-
-  @ApiOperation(value = "Create custom field structure", produces = "application/json")
-  @ResponseStatus(CREATED)
-  @PostMapping(value = "/customFields", produces = "application/json")
-  public void createNewCustomField(@RequestBody JSONObject requestJson) {
-    orchestrationService.createNewCustomField(requestJson);
-  }
-
-//  @ApiOperation(value = "Alter entity endpoint to alter table in database with the provided json request.", consumes = "application/hal+json", produces = "application/json")
-//  @PutMapping(produces = "application/json", consumes = "application/hal+json")
-//  public ResponseEntity<String> alterEntity(
-//      @RequestBody JsonNode requestJson) throws Exception {
-//
-//    step1 Json schema validation needs to be handled for create table
-//    step2 create table with provided fields
-//    DataModelResponse dataModelResponse = orchestrationService
-//        .alterDataModel(requestJson);
-//
-//    step3 return the response back to consumer
-//    return ResponseEntity
-//        .status(dataModelResponse.getHttpStatus())
-//        .body(dataModelResponse.getStatusMessage());
-//  }
 }
 

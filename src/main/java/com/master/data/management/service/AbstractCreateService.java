@@ -3,6 +3,7 @@ package com.master.data.management.service;
 import static com.master.data.management.utils.ApplicationConstants.DATA_TYPE_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.DEFAULT_VALUE_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.MANDATORY_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.REFERENCE_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.SPACE_STR;
 import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.VALIDATIONS_JSON_KEY;
@@ -13,7 +14,6 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
 import com.master.data.management.dto.TableDataType;
-import com.master.data.management.jpa.repos.CustomFieldsRepository;
 import com.master.data.management.jpa.repos.TableVersionsRepository;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,7 +26,6 @@ import org.json.simple.parser.JSONParser;
 public class AbstractCreateService {
 
   protected DataModelDAO dataModelDAO;
-  protected CustomFieldsRepository customFieldsRepository;
   protected TableVersionsRepository tableVersionsRepository;
 
 
@@ -63,19 +62,9 @@ public class AbstractCreateService {
     }
   }
 
-  protected void generateForeignKeys(Object reference, StringBuilder sqlBuilder,
-      String tableName) {
-    if (nonNull(reference)) {
-      sqlBuilder.append(",");
-      JSONObject referenceNode = (JSONObject) reference;
-      prepareForeignKeySql(sqlBuilder, tableName, referenceNode);
-    }
-  }
-
   private void prepareForeignKeySql(StringBuilder sqlBuilder, String tableName,
-      JSONObject referenceNode) {
+      JSONObject referenceNode, String byField) {
     String referTableName = (String) referenceNode.get("table");
-    String byField = (String) referenceNode.get("byField");
     sqlBuilder.append(SPACE_STR)
         .append("CONSTRAINT")
         .append(SPACE_STR)
@@ -99,13 +88,23 @@ public class AbstractCreateService {
     sqlBuilder.append(SPACE_STR);
   }
 
-  protected void generateFieldsSql(JSONArray fieldsArray, StringBuilder sqlBuilder) {
+  protected void generateFieldsSql(JSONArray fieldsArray, StringBuilder sqlBuilder,
+      String tableName) {
     for (Object node : fieldsArray) {
       sqlBuilder.append(",");
 
       JSONObject fieldNode = new JSONObject((Map) node);
       generateFieldSql(sqlBuilder, fieldNode, false);
       generateNotNullSql(sqlBuilder, fieldNode);
+
+      JSONObject reference = getObject(fieldNode, REFERENCE_JSON_KEY);
+      String currentField = (String) fieldNode.get("name");
+
+      if (nonNull(reference)) {
+        sqlBuilder.append(",");
+        prepareForeignKeySql(sqlBuilder, tableName, reference, currentField);
+      }
+
     }
   }
 
@@ -139,9 +138,6 @@ public class AbstractCreateService {
       case STRING:
         extractStringValidations(sqlBuilder, fieldNode);
         break;
-
-      default:
-        throw new IllegalArgumentException("No Match found for table datatype::" + tableDataType);
     }
 
   }
@@ -405,7 +401,8 @@ public class AbstractCreateService {
               .append(SPACE_STR)
               .append(sqlType.toUpperCase())
               .append(SPACE_STR);
-          prepareForeignKeySql(sqlBuilder, tableName, addReference);
+          String byField = (String) addReference.get("byField");
+          prepareForeignKeySql(sqlBuilder, tableName, addReference, byField);
 
           dataModelDAO.executeSQL(sqlBuilder.toString());
         });

@@ -5,19 +5,14 @@ import static com.master.data.management.utils.ApplicationConstants.CONSTRAINTS_
 import static com.master.data.management.utils.ApplicationConstants.FIELDS_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.OPERATION_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.PRIMARY_KEYS_JSON_KEY;
-import static com.master.data.management.utils.ApplicationConstants.REFERENCE_JSON_KEY;
-import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.TABLE_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.TABLE_NAME_JSON_KEY;
 import static java.util.Optional.ofNullable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
-import com.master.data.management.jpa.entities.CustomField;
 import com.master.data.management.jpa.entities.TableVersionEntity;
-import com.master.data.management.jpa.repos.CustomFieldsRepository;
 import com.master.data.management.jpa.repos.TableVersionsRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -42,19 +37,12 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
 
   @Autowired
   public ManageDataModelServiceImpl(DataModelDAO dataModelDAO,
-      CustomFieldsRepository customFieldsRepository,
       TableVersionsRepository tableVersionsRepository,
       ObjectMapper mapper) {
     this.dataModelDAO = dataModelDAO;
-    this.customFieldsRepository = customFieldsRepository;
     this.tableVersionsRepository = tableVersionsRepository;
     this.mapper = mapper;
   }
-
-//  @PostConstruct
-//  public void createRequiredTables() {
-//    dataModelDAO.createTableVersions();
-//  }
 
   @Override
   @Transactional
@@ -72,14 +60,12 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
 
       JSONArray fieldsArray = getArray(jsonObject, FIELDS_JSON_KEY);
       JSONArray primaryKeys = getArray(jsonObject, PRIMARY_KEYS_JSON_KEY);
-      Object reference = jsonObject.get(REFERENCE_JSON_KEY);
 
       //Auto generated id filed will be added by default to each table
       autoGenerateIdField(sqlBuilder);
       //Provided table fields will be added to sql script
-      generateFieldsSql(fieldsArray, sqlBuilder);
+      generateFieldsSql(fieldsArray, sqlBuilder, tableName);
       generatePrimaryKeyForCreateStmt(primaryKeys, sqlBuilder, tableName);
-      generateForeignKeys(reference, sqlBuilder, tableName);
 
       sqlBuilder.append(")");
       log.info("Generated Sql:");
@@ -155,28 +141,5 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
   @Override
   public List<String> getFieldNamesByTableName(String tableName) {
     return dataModelDAO.getFieldNamesByTableName(tableName);
-  }
-
-  @Override
-  public List<CustomField> getAllCustomFields() {
-    return customFieldsRepository.findAll();
-  }
-
-  @Override
-  @Transactional
-  public void createNewCustomField(JSONObject requestJson) {
-    try {
-      String fieldName = (String) requestJson.get(TABLE_FIELD_NAME_JSON_KEY);
-      String fieldJson = new ObjectMapper().writeValueAsString(requestJson);
-      customFieldsRepository
-          .save(
-              CustomField.builder()
-                  .fieldJson(fieldJson)
-                  .fieldName(fieldName)
-                  .build()
-          );
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
   }
 }

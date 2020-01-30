@@ -1,6 +1,5 @@
 package com.master.data.management.service;
 
-import com.master.data.management.jpa.entities.CustomField;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +29,6 @@ public class DataModelsOrchestrationService {
 
   public List<String> getFieldsByTableName(String tableName) {
     return manageDataModelService.getFieldNamesByTableName(tableName);
-  }
-
-  public List<CustomField> getCustomFields() {
-    return manageDataModelService.getAllCustomFields();
-  }
-
-  public void createNewCustomField(JSONObject requestJson) {
-    manageDataModelService.createNewCustomField(requestJson);
   }
 
   //Manage Dataflow Services.

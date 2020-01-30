@@ -111,10 +111,10 @@
   "createdBy": "Admin"
 }
 ```
-3) Alter Table
+3) Create And Alter Table with Address field
 ```
   {
-    "tableName": "testFields20",
+    "tableName": "SalesRecords4",
     "fields": [
       {
         "name": "salesId",
@@ -124,10 +124,6 @@
         "validations": {
           "length": 10,
           "mandatory": true
-        },
-        "reference": {
-          "field": "salesNumber",
-          "table": "salesTable"
         }
       },
       {
@@ -143,6 +139,24 @@
             "numbers": true,
             "splChars": true
           }
+        }
+      },
+      {
+        "name": "addressid",
+        "index": false,
+        "dataType": "bigint",
+        "field-type": "address",
+        "validations": {
+          "mandatory": true,
+          "allowed": {
+            "chars": true,
+            "numbers": true,
+            "splChars": true
+          }
+        },
+        "reference": {
+          "field": "id",
+          "table": "address"
         }
       },
       {
@@ -167,7 +181,7 @@
     "changes": {
       "table": {
         "status": "ACTIVE",
-        "rename": "renamedTable20"
+        "rename": "renamedTable21"
       },
       "fields": {
         "add": [
@@ -257,6 +271,7 @@
     },
     "updatedBy": "Admin"
   }
+
 
 ```
 
