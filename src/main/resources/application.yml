@@ -13,3 +13,11 @@ management:
         exclude: ["env","beans"]
 server:
   port: 2101
+
+---
+spring:
+  profiles: cloud
+  datasource:
+    url: ${vcap.services.user-provided-postgresql.credentials.url}
+    username: ${vcap.services.user-provided-postgresql.credentials.username}
+    password: ${vcap.services.user-provided-postgresql.credentials.password}

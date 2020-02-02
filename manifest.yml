@@ -1,0 +1,18 @@
+applications:
+- name: MASTER-DATA-MANAGEMENT-RDBMS-API-V1-0
+  spring_profiles_active: cloud
+  mem ory: 1G
+  instances: 1
+  disk_quota: 1G
+  health-check-type: process
+#  health-check-http-endpoint: /health
+  timeout: 80
+  buildpacks:
+   - https://github.com/cloudfoundry/java-buildpack.git
+  path: build/libs/master-data-service-rdbms-1.0-SNAPSHOT.jar
+  services:
+   - user-provided-postgresql
+  env:
+    ACTIVE_PROFILES_PROPERTY_NAME: cloud
+#routes:
+#- route: mongodb-users-v1-cloud-property.cfapps.io
