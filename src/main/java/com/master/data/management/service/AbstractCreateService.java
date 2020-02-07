@@ -14,6 +14,7 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
 import com.master.data.management.dto.TableDataType;
+import com.master.data.management.jpa.repos.CustomFieldRepository;
 import com.master.data.management.jpa.repos.TableVersionsRepository;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class AbstractCreateService {
 
   protected DataModelDAO dataModelDAO;
   protected TableVersionsRepository tableVersionsRepository;
+  protected CustomFieldRepository customFieldRepository;
 
 
   protected void generatePrimaryKeyForCreateStmt(JSONArray primaryKeys,

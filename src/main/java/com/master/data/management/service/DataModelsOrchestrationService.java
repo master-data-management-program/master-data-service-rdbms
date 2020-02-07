@@ -31,6 +31,10 @@ public class DataModelsOrchestrationService {
     return manageDataModelService.getFieldNamesByTableName(tableName);
   }
 
+  public void createAndAlterCustomField(JSONObject requestJson) {
+    manageDataModelService.upsertCustomField(requestJson);
+  }
+
   //Manage Dataflow Services.
 
 

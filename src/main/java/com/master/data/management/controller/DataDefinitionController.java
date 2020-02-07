@@ -1,6 +1,7 @@
 package com.master.data.management.controller;
 
 import static com.master.data.management.utils.ApplicationConstants.OPERATION_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -69,6 +70,28 @@ public class DataDefinitionController {
       @PathVariable("tableName") String tableName) {
     List<String> fieldsList = orchestrationService.getFieldsByTableName(tableName);
     return ResponseEntity.status(OK).body(fieldsList);
+  }
+
+  @ApiOperation(value = "UpsertCustomField endpoint to create and alter custom field with the provided json request.", consumes = "application/hal+json", produces = "application/json")
+  @PostMapping(value = "customFields", produces = "application/json", consumes = "application/json")
+  public ResponseEntity<String> upsertCustomField(
+      @RequestBody JSONObject requestJson) throws Exception {
+    if (isNull(requestJson)) {
+      throw new IllegalArgumentException("Request body must not be empty.");
+    }
+    Object fieldName = requestJson.get(TABLE_FIELD_NAME_JSON_KEY);
+    HttpStatus status = CREATED;
+    String responseBody = "Successfully Entity has been created.";
+
+    orchestrationService.createAndAlterCustomField(requestJson);
+
+    //step3 return the response back to consumer
+//    if (nonNull(operation) && !operation.equals("create")) {
+//      status = OK;
+//      responseBody = "Successfully Entity has been updated.";
+//    }
+
+    return ResponseEntity.status(status).body(responseBody);
   }
 }
 
