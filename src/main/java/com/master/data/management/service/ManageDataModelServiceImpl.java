@@ -14,11 +14,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
 import com.master.data.management.jpa.entities.CustomFieldEntity;
+import com.master.data.management.jpa.entities.CustomFieldEntity.CustomFieldEntityBuilder;
 import com.master.data.management.jpa.entities.TableVersionEntity;
 import com.master.data.management.jpa.repos.CustomFieldRepository;
 import com.master.data.management.jpa.repos.TableVersionsRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +163,7 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
         .orElse(
             CustomFieldEntity
                 .builder()
+                .id(ZonedDateTime.now().toEpochSecond())
                 .fieldName(fieldName)
                 .build()
         );
