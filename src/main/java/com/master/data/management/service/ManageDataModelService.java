@@ -10,4 +10,6 @@ public interface ManageDataModelService {
   List<String> getTablesList();
 
   List<String> getFieldNamesByTableName(String tableName);
+
+  void upsertCustomField(JSONObject requestJson);
 }

@@ -5,6 +5,7 @@ import static com.master.data.management.utils.ApplicationConstants.CONSTRAINTS_
 import static com.master.data.management.utils.ApplicationConstants.FIELDS_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.OPERATION_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.PRIMARY_KEYS_JSON_KEY;
+import static com.master.data.management.utils.ApplicationConstants.TABLE_FIELD_NAME_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.TABLE_JSON_KEY;
 import static com.master.data.management.utils.ApplicationConstants.TABLE_NAME_JSON_KEY;
 import static java.util.Optional.ofNullable;
@@ -12,7 +13,9 @@ import static java.util.Optional.ofNullable;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.master.data.management.dao.DataModelDAO;
+import com.master.data.management.jpa.entities.CustomFieldEntity;
 import com.master.data.management.jpa.entities.TableVersionEntity;
+import com.master.data.management.jpa.repos.CustomFieldRepository;
 import com.master.data.management.jpa.repos.TableVersionsRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,9 +41,11 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
   @Autowired
   public ManageDataModelServiceImpl(DataModelDAO dataModelDAO,
       TableVersionsRepository tableVersionsRepository,
+      CustomFieldRepository customFieldRepository,
       ObjectMapper mapper) {
     this.dataModelDAO = dataModelDAO;
     this.tableVersionsRepository = tableVersionsRepository;
+    this.customFieldRepository = customFieldRepository;
     this.mapper = mapper;
   }
 
@@ -141,5 +146,34 @@ public class ManageDataModelServiceImpl extends AbstractCreateService implements
   @Override
   public List<String> getFieldNamesByTableName(String tableName) {
     return dataModelDAO.getFieldNamesByTableName(tableName);
+  }
+
+  @SneakyThrows
+  @Override
+  public void upsertCustomField(JSONObject jsonObject) {
+    String fieldName = String.valueOf(jsonObject.get(TABLE_FIELD_NAME_JSON_KEY));
+    String effective = mapper.writeValueAsString(jsonObject);
+
+    Optional<CustomFieldEntity> entityOptional = customFieldRepository
+        .findByFieldName(fieldName);
+
+    CustomFieldEntity customFieldEntity = entityOptional
+        .orElse(
+            CustomFieldEntity
+                .builder()
+                .fieldName(fieldName)
+                .build()
+        );
+
+    if (entityOptional.isPresent()) {
+      log.info("{} is existing in table", fieldName);
+    }
+
+    customFieldEntity.setCustomFieldJson(effective);
+
+    customFieldRepository.save(customFieldEntity);
+
+    log.info("Custom Field has been successfully updated with latest JsonObject.");
+
   }
 }

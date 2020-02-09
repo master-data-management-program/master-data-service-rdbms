@@ -1,6 +1,6 @@
 # master-data-service-rdbms
 ### SWAGGER
- - [swagger link](http://localhost:2101/swagger-ui.html#/)
+ - [swagger link](https://master-data-management-rdbms-api-v1-0.cfapps.io/swagger-ui.html#/)
  
 ### Sample request payload:
 
